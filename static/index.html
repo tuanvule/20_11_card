@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Flask + Google GenAI</title>
+</head>
+<body>
+  <h2>Test Google GenAI qua Flask</h2>
+  <textarea id="prompt" rows="4" cols="60">Hãy viết một câu chúc ngày 20/10.</textarea><br/>
+  <button id="go">Gửi</button>
+  <pre id="output"></pre>
+
+  <script>
+    document.getElementById("go").addEventListener("click", async () => {
+      const prompt = document.getElementById("prompt").value;
+      const output = document.getElementById("output");
+      output.textContent = "Đang gửi...";
+      
+      const resp = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt })
+      });
+      const data = await resp.json();
+      if (data.ok) {
+        output.textContent = data.text;
+      } else {
+        output.textContent = "Lỗi: " + data.error;
+      }
+    });
+  </script>
+</body>
+</html>
